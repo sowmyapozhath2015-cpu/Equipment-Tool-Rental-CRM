@@ -21,6 +21,8 @@ namespace RentalCRM.Models
 
         public decimal DepositAmount { get; set; }
 
+        public decimal LateFee { get; set; } = 0;
+
         public string Status { get; set; } = "Reserved";
     }
 }

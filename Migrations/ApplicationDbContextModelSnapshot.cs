@@ -338,6 +338,9 @@ namespace RentalCRM1.Migrations
                     b.Property<DateTime>("ExpectedReturnDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("LateFee")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("RentalDate")
                         .HasColumnType("datetime2");
 

@@ -177,7 +177,15 @@ public class RentalsController : Controller
             if (product != null)
                 product.Quantity += item.Quantity;
         }
+        var returnDate = DateTime.Now.Date;
+        var expectedDate = rental.ExpectedReturnDate.Date;
 
+        int lateDays = Math.Max(
+            0, (returnDate - expectedDate).Days);
+
+        decimal lateFeePerDay = 100m;
+
+        rental.LateFee = lateDays * lateFeePerDay;
         rental.Status = "Returned";
         rental.ActualReturnDate = DateTime.Now;
 
