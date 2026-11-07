@@ -60,6 +60,15 @@
                     </ul>
                 </div>
             </div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        Logout
+                    </button>
+                </form>
+            }
         </nav>
     </header>
     <div class="container">

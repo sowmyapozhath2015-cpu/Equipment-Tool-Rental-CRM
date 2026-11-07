@@ -1,77 +1,73 @@
 @model IEnumerable<RentalCRM.Models.Rental>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Rentals";
 }
 
-<h1>Index</h1>
+<h1>Rentals</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">
+        Create New
+    </a>
 </p>
-<table class="table">
+
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExpectedReturnDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActualReturnDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DepositAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
+            <th>Customer ID</th>
+            <th>Customer</th>
+            <th>Rental Date</th>
+            <th>Expected Return Date</th>
+            <th>Actual Return Date</th>
+            <th>Total Amount</th>
+            <th>Deposit Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.CustomerId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Customer)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.RentalDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ExpectedReturnDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ActualReturnDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TotalAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DepositAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CustomerId</td>
+                <td>@Html.DisplayFor(model => item.Customer)</td>
+                <td>@item.RentalDate</td>
+                <td>@item.ExpectedReturnDate</td>
+                <td>@item.ActualReturnDate</td>
+                <td>@item.TotalAmount</td>
+                <td>@item.DepositAmount</td>
+                <td>@item.Status</td>
+
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id">Edit</a> |
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id">Details</a> |
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id">Delete</a>
+
+                    @if (item.Status != "Returned")
+                    {
+                        <form asp-controller="Rentals"
+                              asp-action="Return"
+                              asp-route-id="@item.Id"
+                              method="post"
+                              style="display:inline;">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-success btn-sm">
+                                Return
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

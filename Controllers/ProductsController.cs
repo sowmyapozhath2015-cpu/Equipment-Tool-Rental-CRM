@@ -1,9 +1,10 @@
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalCRM.Models;
 using RentalCRM.Data;
 
+[Authorize(Roles = "Admin")]
 public class ProductsController : Controller
 {
     private readonly ApplicationDbContext _context;

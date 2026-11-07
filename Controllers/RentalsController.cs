@@ -1,4 +1,4 @@
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalCRM.Models;
@@ -147,6 +147,43 @@ public class RentalsController : Controller
         }
 
         await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Staff")]
+    public async Task<IActionResult> Return(int id)
+    {
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync();
+
+        var rental = await _context.Rentals.FindAsync(id);
+
+        if (rental == null)
+            return NotFound();
+
+        if (rental.Status == "Returned")
+            return RedirectToAction(nameof(Index));
+
+        var items = await _context.RentalItems
+            .Where(x => x.RentalId == id)
+            .ToListAsync();
+
+        foreach (var item in items)
+        {
+            var product = await _context.Products
+                .FindAsync(item.ProductId);
+
+            if (product != null)
+                product.Quantity += item.Quantity;
+        }
+
+        rental.Status = "Returned";
+        rental.ActualReturnDate = DateTime.Now;
+
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
+
         return RedirectToAction(nameof(Index));
     }
 
